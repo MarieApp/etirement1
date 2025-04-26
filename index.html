@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Réveil Étirements Doux - Ai-Me | Au Pays de Marie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"/>
+  <style>
+    body {
+      font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+      background: #fffaf6;
+      color: #232323;
+    }
+    .orange-gradient {
+      background: linear-gradient(90deg, #ffad5f 0%, #fd7b3b 100%);
+    }
+    .header-bg {
+      background: linear-gradient(90deg, #ffad5f 0%, #fd7b3b 50%, #ffeedb 100%);
+    }
+    .day-card {
+      border-radius: 1rem;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 4px 24px 0 rgba(255, 173, 95, 0.08);
+      margin-bottom: 2.5rem;
+      background: #fff;
+      border-top: 6px solid #fd7b3b;
+    }
+    .mini-btn {
+      transition: background 0.2s, box-shadow 0.2s;
+      background: linear-gradient(90deg, #fff2e0 50%, #ffad5f 150%);
+      color: #fd7b3b;
+      border-radius: 9999px;
+      font-size: 1rem;
+      font-weight: 600;
+      box-shadow: 0 1px 6px 0 rgba(255,170,80,0.08);
+      padding: 0.5rem 1.15rem;
+      outline: none;
+      border: none;
+      margin: 0 0.33rem 1rem 0;
+      cursor: pointer;
+      will-change: background, box-shadow;
+    }
+    .mini-btn.selected,
+    .mini-btn:hover {
+      background: linear-gradient(90deg, #fd7b3b 60%, #ffad5f 160%);
+      color: #fff;
+      box-shadow: 0 2px 10px 0 rgba(253,123,59,0.15);
+    }
+    .resp-btn {
+      background: #fef3ed;
+      color: #fd7b3b;
+      border-radius: 1.2rem;
+      font-size: 1rem;
+      font-weight: 700;
+      box-shadow: 0 1px 6px 0 rgba(255,170,80,0.07);
+      padding: 0.5rem 1.3rem;
+      display: inline-flex;
+      align-items: center;
+      transition: background 0.2s;
+      border: none;
+      outline: none;
+      cursor: pointer;
+    }
+    .resp-btn:hover {
+      background:#fd7b3b;
+      color: #fff;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <header class="header-bg py-10 px-4 text-center rounded-b-3xl shadow-md mb-8">
+    <h1 class="text-3xl md:text-5xl font-bold text-white mb-2 tracking-tight drop-shadow-sm">Réveil Étirements Doux <i class="fa-solid fa-person-walking"></i></h1>
+    <p class="text-white text-lg md:text-xl max-w-2xl mx-auto">15 jours pour se réveiller souplement : étirements doux, boissons naturelles, respiration — commencez la journée en forme et le visage frais naturellement.</p>
+  </header>
+  <main class="flex-1 container mx-auto px-4 md:px-12 lg:px-40 py-6">
+    <!-- Outil cohérence cardiaque -->
+    <section class="flex mb-6 items-center justify-center">
+      <button id="btn-coh-cardiaque" class="resp-btn mr-3"><i class="fa-solid fa-heart-pulse mr-2"></i>Cohérence cardiaque</button>
+      <span class="text-orange-600 font-medium italic">Un clic pour démarrer la respiration guidée</span>
+    </section>
+    <div id="cardiac-tool" class="w-full mb-8 flex flex-col items-center hidden">
+      <div class="max-w-md w-full bg-white rounded-xl shadow-lg border border-orange-100 px-4 py-6 mb-3 text-center">
+        <h3 class="text-lg font-bold text-orange-600 mb-2 flex items-center justify-center"><i class="fa-solid fa-wave-square mr-2"></i>Exercice Cohérence cardiaque</h3>
+        <div class="mb-2 text-gray-700">Inspirez pendant <span class="font-bold text-orange-500">5s</span>, expirez pendant <span class="font-bold text-orange-500">5s</span>.<br>Durée conseillée : <span class="italic">1 à 3 minutes</span>.</div>
+        <div class="flex flex-col items-center my-4">
+          <svg width="60" height="60" id="circlebreath">
+            <circle cx="30" cy="30" r="25" fill="#fde6cc" stroke="#fd7b3b" stroke-width="4" />
+            <circle id="breathIndicator" cx="30" cy="30" r="15" fill="#fd7b3b" opacity="0.85" />
+          </svg>
+        </div>
+        <div id="cc-phase" class="font-bold text-orange-700 text-lg mb-1">Prêt ?</div>
+        <button id="btn-cc-start" class="mini-btn mt-3">Commencer</button>
+        <button id="btn-cc-stop" class="mini-btn" style="display:none;">Arrêter</button>
+      </div>
+    </div>
+    <!-- Focus Etirements -->
+    <section class="mb-8">
+      <h2 class="text-2xl font-bold text-orange-600 mb-3 flex items-center"><i class="fa-solid fa-child-reaching mr-2"></i> Pourquoi s’étirer au réveil ?</h2>
+      <ul class="list-disc pl-6 text-base md:text-lg text-gray-700 mb-4">
+        <li><b>Prévention</b> : Réveille en douceur tout le corps et protège les articulations.</li>
+        <li><b>Relance la circulation</b> : Favorise l’élimination de l’eau accumulée pendant la nuit.</li>
+        <li><b>Énergie</b> : Améliore l’oxygénation, chasse la fatigue et redonne du tonus avant de démarrer la journée.</li>
+        <li><b>Bien-être</b> : Apaise le mental, réduit le stress, et donne une sensation de légèreté (et ça se voit sur le visage!).</li>
+      </ul>
+    </section>
+    <!-- Navigation par boutons jours -->
+    <section class="mb-9">
+      <div class="overflow-x-auto py-3 flex flex-wrap justify-center">
+        <button class="mini-btn selected" data-day="1">Jour 1</button>
+        <button class="mini-btn" data-day="2">Jour 2</button>
+        <button class="mini-btn" data-day="3">Jour 3</button>
+        <button class="mini-btn" data-day="4">Jour 4</button>
+        <button class="mini-btn" data-day="5">Jour 5</button>
+        <button class="mini-btn" data-day="6">Jour 6</button>
+        <button class="mini-btn" data-day="7">Jour 7</button>
+        <button class="mini-btn" data-day="8">Jour 8</button>
+        <button class="mini-btn" data-day="9">Jour 9</button>
+        <button class="mini-btn" data-day="10">Jour 10</button>
+        <button class="mini-btn" data-day="11">Jour 11</button>
+        <button class="mini-btn" data-day="12">Jour 12</button>
+        <button class="mini-btn" data-day="13">Jour 13</button>
+        <button class="mini-btn" data-day="14">Jour 14</button>
+        <button class="mini-btn" data-day="15">Jour 15</button>
+      </div>
+    </section>
+    <!-- Étirements/jus/respiration : Séquences jour par jour -->
+    <section id="days-content" class="mb-12">
+      <div id="day-1" class="day-card border-l-8 border-orange-400">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 1</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Posture du chat-vache (dos à quatre pattes, creuser puis arrondir le dos lentement pendant 1 minute).</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Carotte & citron : 2 carottes + le jus d’1 citron, allongé avec un peu d’eau fraîche.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Respiration profonde : inspirez par le nez sur 4 temps, bloquez 2 temps, expirez par la bouche sur 6 temps. Répétez 5 fois.</div>
+      </div>
+      <div id="day-2" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 2</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Posture de l’enfant : asseyez-vous sur les talons, buste vers l’avant, bras tendus, relâchez la nuque (1 minute).</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Epinard & pomme : 1 poignée d’épinards, 1 pomme, un peu d’eau, mixés et filtrés.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Respiration alternée : bouche fermée, inspirez par une narine, expirez par l'autre, changez de narine à chaque cycle (3x2 cycles).</div>
+      </div>
+      <div id="day-3" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 3</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Étirement assis latéral : assis, jambes croisées, bras droit étiré vers le haut et penché à gauche. Répétez des deux côtés (30s chaque).</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Gingembre & orange : 1 rondelle de gingembre frais pressée, le jus d’une orange, un peu d’eau.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-heart-pulse mr-1"></i> Respiration</span> : Cohérence cardiaque : inspirez 5s, expirez 5s, sur 1 min.</div>
+      </div>
+      <div id="day-4" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 4</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Rotation douce du cou : assis, épaules relâchées, tourner doucement la tête de droite à gauche et incliner, 5 fois doucement.</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Concombre & citron : ½ concombre pelé, le jus d’1 citron, eau fraîche.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Respiration abdominale : main sur le ventre, inspirez lentement par le nez, sentez le ventre se gonfler, expirez doucement, 5 cycles.</div>
+      </div>
+      <div id="day-5" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 5</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Pince debout : debout, jambes tendues, mains relâchées vers le sol, laissez le dos s’étirer, tenez 45 secondes.</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Pomme & céleri : 1 branche de céleri, 1 pomme, quelques glaçons, mixés et filtrés.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Respiration « 4-7-8 » : inspirez sur 4 temps, retenez 7, expirez 8. 3x.</div>
+      </div>
+      <div id="day-6" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 6</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Dos rond assis : assis, plante des pieds ensemble, dos rond, tenez vos chevilles et laissez tomber la tête, 1 min.</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Carotte & gingembre : 2 carottes, 1 petit morceau de gingembre frais, jus d’orange, mixés avec un peu d’eau.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Pleine conscience : observez 5 cycles d’inspiration et d’expiration lentes sans jugement.</div>
+      </div>
+      <div id="day-7" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 7</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Genoux poitrine : allongé sur le dos, ramenez les genoux vers la poitrine et bercez doucement de droite à gauche (1 minute).</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Persil & pomme : 1 cuil. à soupe de persil frais, 1 pomme, eau, mixés et filtrés.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Respiration du matin : 3 souffles profonds bouche ouverte, puis 5 cycles inspirer par le nez, expirer par la bouche.</div>
+      </div>
+      <div id="day-8" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 8</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Étirement des poignets : bras tendu devant, attrapez les doigts avec l’autre main, pliez doucement vers vous, tenez 15s de chaque côté.</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Betterave & orange : petite betterave cuite, le jus de ½ orange, un peu d’eau, mixés.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Respiration en carré : inspirez 4s, retenez 4s, expirez 4s, gardez poumons vides 4s, répétez 5x.</div>
+      </div>
+      <div id="day-9" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 9</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Chien tête en bas (yoga) : mains/orteils au sol, bassin vers le ciel, relâchez la tête, allongez la colonne (1 minute).</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Pomme & citron & menthe : 1 pomme, le jus d’1 citron, quelques feuilles de menthe, eau fraîche.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Plein souffle 3-5-7 : inspirez profondément 3s, retenez 5s, expirez longuement 7s, faites 3 cycles.</div>
+      </div>
+      <div id="day-10" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 10</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Ouverture de poitrine (debout) : mains croisées dans le dos, tendez les bras et ouvrez la poitrine, respirez profondément (30s).</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Jus céleri, concombre, pomme : ½ concombre, 1 branche de céleri, 1 pomme, mixés, filtrés.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Respiration relaxante : inspirez sur 6s, expirez sur 8s, faites 5 cycles.</div>
+      </div>
+      <div id="day-11" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 11</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Posture de la pince assise : jambes tendues devant, essayez de toucher les pieds, restez 30-45 secondes.</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Jus carotte, orange, curcuma frais râpé (petite quantité), filtrez et dégustez.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Séries de 5 soupirs : inspirez, soupirez longuement en relâchant tout l’air, recommencez 5 fois.</div>
+      </div>
+      <div id="day-12" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 12</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Étirement du coude derrière la tête : bras tendu vers le haut, main touche l’omoplate, aidez avec l’autre main, 20s de chaque côté.</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Poire & gingembre : 1 poire, une petite rondelle de gingembre, quelques glaçons, mixés finement.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Respiration de la lumière : inspirez lentement en imaginant la chaleur orangée se diffuser dans tout le corps, expirez doucement (5 cycles).</div>
+      </div>
+      <div id="day-13" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 13</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Cercle des chevilles : allongé sur le dos, jambes relevées, faites tourner chevilles lentement, 10 cercles chaque sens.</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Ananas & citron vert : 2 tranches d’ananas, le jus de ½ citron vert, eau glacée.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Respiration narine unique : bouchez une narine, inspirez/expirez par l’autre 5 temps, puis changez de côté.</div>
+      </div>
+      <div id="day-14" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 14</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Épaules roulées : debout ou assis, roulez lentement vos épaules 10 fois vers l’arrière, puis l’avant.</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Fenouil & orange : ½ bulbe de fenouil, le jus d’1 orange, un peu d’eau fraîche.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Respirations rafraîchissantes : inspirez profondément en ouvrant grand les bras, expirez en les refermant autour du buste, faites 5 cycles.</div>
+      </div>
+      <div id="day-15" class="day-card border-l-8 border-orange-400 hidden">
+        <div class="flex items-center mb-3"><i class="fa-solid fa-seedling text-orange-500 mr-2"></i>
+          <h3 class="text-xl font-bold text-orange-700">Jour 15</h3>
+        </div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-person-praying mr-1"></i> Étirement</span> : Étirement global : debout, bras tendus vers le ciel, montez sur la pointe des pieds, étirez tout le corps, relâchez. Recommencez 3 fois.</div>
+        <div class="mb-2"><span class="font-bold text-orange-500"><i class="fa-solid fa-blender-phone mr-1"></i> Jus</span> : Pastèque & menthe : 3 cubes de pastèque, quelques feuilles de menthe, un peu d’eau ou de glace, mixez et filtrez.</div>
+        <div class=""><span class="font-bold text-orange-500"><i class="fa-solid fa-wind mr-1"></i> Respiration</span> : Respiration gratitude : inspirez profondément, à l’expir pensez à un moment de gratitude, répétez 5 fois.</div>
+      </div>
+    </section>
+    <!-- Conseils et astuces -->
+    <section class="mb-11">
+      <h2 class="text-2xl font-bold text-orange-600 mb-3 flex items-center"><i class="fa-solid fa-face-smile-beam mr-2"></i> Visage frais : astuces douces et boissons</h2>
+      <ul class="list-disc pl-6 text-gray-800 space-y-1 mb-2">
+        <li>Buvez un verre d’eau dès le lever pour relancer la circulation des fluides.</li>
+        <li>Appliquez un linge frais ou une cuillère froide sur les yeux pendant 1 minute pour aider à résorber les poches.</li>
+        <li>Massez doucement le visage et le contour des yeux du bout des doigts pour stimuler le drainage naturel.</li>
+        <li>Privilégiez des boissons sans lait ni sucres ajoutés ; préférez les mélanges purs de fruits/légumes et herbes fraîches.</li>
+        <li>Pensez à dormir la tête légèrement surélevée pour limiter la stagnation des liquides.</li>
+      </ul>
+      <div class="text-orange-400 mt-4"><i class="fa-solid fa-lightbulb mr-1"></i> Gardez ces routines, même après 15 jours, pour prolonger la fraîcheur du réveil !</div>
+    </section>
+    <!-- Gonflement du visage, discret -->
+    <section class="mb-6">
+      <h2 class="text-lg font-bold text-orange-500 mb-2 flex items-center"><i class="fa-solid fa-circle-info mr-2"></i> Pourquoi parfois le visage est-il gonflé ?</h2>
+      <p class="text-base text-gray-700 mb-2">
+        La position allongée, la rétention d’eau, l’excès de sel, la fatigue ou le stress favorisent la présence de poches au lever. S’étirer, boire, respirer et chasser le stress grâce au mouvement, c’est capital pour un matin lumineux et une mine épanouie !
+      </p>
+      <div class="text-gray-500 italic text-xs">Cessez d’y penser, tout le programme met l’accent d’abord sur le mouvement et l’énergie !</div>
+    </section>
+    <section class="mb-6">
+      <div class="text-center text-orange-400 text-lg font-semibold italic">Merci de prendre soin de vous, en douceur, chaque matin !</div>
+    </section>
+  </main>
+  <footer class="text-center py-4 orange-gradient text-white rounded-t-2xl mt-4 text-sm tracking-wide">
+    &copy; 2024 <span class="font-bold">Ai-Me | Au Pays de Marie</span>
+  </footer>
+  <script>
+    // Changement de jour = navigation bouton
+    const btns = document.querySelectorAll('.mini-btn[data-day]');
+    const cards = [];
+    for (let i = 1; i <= 15; i++) cards.push(document.getElementById(`day-${i}`));
+    btns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        btns.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        const day = parseInt(btn.getAttribute('data-day'));
+        cards.forEach(card => card.classList.add('hidden'));
+        document.getElementById(`day-${day}`).classList.remove('hidden');
+        window.scrollTo({top: document.getElementById(`days-content`).offsetTop - 20, behavior:'smooth'});
+      });
+    });
+
+    // Outil cohérence cardiaque
+    const ccTool = document.getElementById('cardiac-tool');
+    const ccBtn = document.getElementById('btn-coh-cardiaque');
+    ccBtn.addEventListener('click', () => {
+      ccTool.classList.toggle('hidden');
+      window.scrollTo({top: ccTool.offsetTop - 30, behavior:'smooth'});
+    });
+    // Animation cohérence cardiaque
+    let breathIntervalId = null, phase=0, totalPhases=12;
+    const ccStartBtn = document.getElementById('btn-cc-start');
+    const ccStopBtn = document.getElementById('btn-cc-stop');
+    const indicator = document.getElementById('breathIndicator');
+    const phaseLabel = document.getElementById('cc-phase');
+    function animateBreathe(isIn) {
+      indicator.setAttribute("r", isIn ? "25" : "15");
+      indicator.setAttribute("fill", isIn ? "#fd7b3b" : "#ffad5f");
+    }
+    function doCohCardiac() {
+      let step = 0;
+      phase=0;
+      function next() {
+        if (phase>=totalPhases) {
+          phaseLabel.textContent = "Terminé !";
+          ccStartBtn.style.display="";
+          ccStopBtn.style.display="none";
+          animateBreathe(false);
+          return;
+        }
+        if (step % 2 === 0) {
+          // Inspiration
+          animateBreathe(true);
+          phaseLabel.textContent = "Inspirez ...";
+          setTimeout(() => {step++; phase++; next();}, 5000);
+        } else {
+          // Expiration
+          animateBreathe(false);
+          phaseLabel.textContent = "Expirez ...";
+          setTimeout(() => {step++; next();}, 5000);
+        }
+      }
+      next();
+    }
+    ccStartBtn.addEventListener('click', function() {
+      ccStartBtn.style.display="none";
+      ccStopBtn.style.display="";
+      phaseLabel.textContent = "Inspirez ...";
+      animateBreathe(true);
+      doCohCardiac();
+    });
+    ccStopBtn.addEventListener('click', function() {
+      ccStartBtn.style.display="";
+      ccStopBtn.style.display="none";
+      phaseLabel.textContent = "Prêt ?";
+      animateBreathe(false);
+    });
+  </script>
+</body>
+</html>
+
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDgPLrcXTbMxF6IgONCx%2FiNgefAwN8RJ8%2BkDLOlE0K1hMd5xqCUX6Uoeb9jyKakgOvBa8u7F8FDyHA4KZPH%2FvxGP%2Ff%2FGSWu2MjUsLttgb3TJNHi4wZTwcv3bPRIpGkKXy4l1TlKLCV8aHKOoDHpvxrSUvPdcmihlIlo0K3mKavSPVBswA%2FV7eBpGgWiH%2Fo%2FO%2FDtcOaueHniBpHb%2BPWZBS4d0E0sw%2FSlAnF1XYbBGMJKuw7565QKxDy2pqXn6htAmT9EeSFGI84nQ6J0rw62YTKUHxDiowEolv0Fh4rItmgCFmORcVat7NRN%2Bvak5grLdU4mYsc%2F05gOzu%2BRHFKGyU7rNXmaqYTx8%2FO8xnhoJg2Pn5XL2rnS6Ioagz4yY9Yd4d815BcOxYTOwAzW1%2FQKMlQ2xo%2BenI1fjpG7v7AGJ%2B6SMPoXQV%2BflrvIZ82n38uDJa1cbsCemqDbGcQc9UEZRiB69msJ9VSKxCNoGeQxgcCbkivwgOGfvvda2Ny8uD8pzlng%3D%3D";
+        window.__genspark_locale = "fr-FR";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDgPLrcXTbMxF6IgONCx/iNgefAwN8RJ8+kDLOlE0K1hMd5xqCUX6Uoeb9jyKakgOvBa8u7F8FDyHA4KZPH/vxGP/f/GSWu2MjUsLttgb3TJNHi4wZTwcv3bPRIpGkKXy4l1TlKLCV8aHKOoDHpvxrSUvPdcmihlIlo0K3mKavSPVBswA/V7eBpGgWiH/o/O/DtcOaueHniBpHb+PWZBS4d0E0sw/SlAnF1XYbBGMJKuw7565QKxDy2pqXn6htAmT9EeSFGI84nQ6J0rw62YTKUHxDiowEolv0Fh4rItmgCFmORcVat7NRN+vak5grLdU4mYsc/05gOzu+RHFKGyU7rNXmaqYTx8/O8xnhoJg2Pn5XL2rnS6Ioagz4yY9Yd4d815BcOxYTOwAzW1/QKMlQ2xo+enI1fjpG7v7AGJ+6SMPoXQV+flrvIZ82n38uDJa1cbsCemqDbGcQc9UEZRiB69msJ9VSKxCNoGeQxgcCbkivwgOGfvvda2Ny8uD8pzlng==";
+    </script>
+    
